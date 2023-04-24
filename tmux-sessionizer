@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# start a new tmux session
+tmux new-session -d -s dummy-session
+tmux kill-session -t dummy-session
+
+session=$(find ~ ~/Development -mindepth 1 -maxdepth 1  -type d | fzf)
+session_name=$(basename "$session" | tr . _)
+#echo $session_name +__+$session
+if  tmux has-session -t "$session_name" 2> /dev/null; then
+
+	tmux attach-session -t "$session_name" 
+else
+	tmux new-session -s "$session_name" -c "$session" 
+fi
+
+#tmux switch-client -t "$session_name"
